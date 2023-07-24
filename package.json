@@ -1,0 +1,15 @@
+{
+  "name": "stm",
+  "version": "1.2.3",
+  "description": "stm integration",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "VS Code Hello"
+  },
+  "author": "",
+  "license": "ISC"
+}
