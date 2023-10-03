@@ -23,7 +23,13 @@ jobs:
 
       - name: Install electron-builder globally
         run: npm install -g electron-builder
-          
+        
+      - name: Clean Yarn Cache
+        run: yarn cache clean
+        
+      - name: Install Dependencies with File Checking
+        run: yarn install --check-files
+        
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with: 
