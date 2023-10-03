@@ -21,9 +21,8 @@ jobs:
         with: 
           node-version: 14
 
-      - name: Install Electron Builder
-        run: |
-          npm install -g electron-builder
+      - name: Install electron-builder globally
+        run: npm install -g electron-builder
           
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
