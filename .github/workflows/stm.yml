@@ -1,27 +1,29 @@
-name: Code signing with Software Trust Manager
-
-on: push
-
+name: 'build and release electron installer'
+on:
+  push:
+    tags:
+      - 'v*'
+      
 jobs:
   release:
     runs-on: ${{ matrix.os }}
-
+    
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
-
+        os: [windows-latest]
+        
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
-        with:
+        with: 
           node-version: 14
-
+        
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
-        with:
+        with: 
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
           build_script_name: dist
@@ -33,6 +35,7 @@ jobs:
           cat /d/Certificate_pkcs12.p12
         shell: bash
 
+          
       - name: Set variables
         id: variables
         run: |
@@ -48,7 +51,7 @@ jobs:
 
       - name: Setup SSM KSP on windows latest
         run: |
-          curl -X GET https://one.digicert.com/signingmanager/api-ui/v1/releases/smtools-windows-x64.msi/download -H "x-api-key:${{ secrets.SM_API_KEY }}" -o smtools-windows-x64.msi
+          curl -X GET  https://one.digicert.com/signingmanager/api-ui/v1/releases/smtools-windows-x64.msi/download -H "x-api-key:%SM_API_KEY%" -o smtools-windows-x64.msi
           msiexec /i smtools-windows-x64.msi /quiet /qn
           smksp_registrar.exe list
           smctl.exe keypair ls
@@ -61,10 +64,10 @@ jobs:
           signtool.exe sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\github-action-electron\github-action-electron\dist\my-electron-app Setup ${{ steps.variables.outputs.version }}.exe"
           signtool.exe verify /v /pa "D:\a\github-action-electron\github-action-electron\dist\my-electron-app Setup ${{ steps.variables.outputs.version }}.exe"
 
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.os }}
           path: |
             dist
-
