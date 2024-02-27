@@ -1,4 +1,5 @@
 name: 'build and release electron installer'
+
 on:
   push:
     tags:
@@ -20,24 +21,7 @@ jobs:
         uses: actions/setup-node@v2
         with: 
           node-version: 14
-
-      - name: Check Node.js version
-        run: node --version
-
-      - name: Check Yarn version
-        run: yarn --version
-
-      - name: Install Dependencies
-        run: |
-          yarn install
-          yarn global add electron-builder
-
-      - name: Verify electron-builder installation
-        run: yarn list electron-builder
-
-      - name: Run Build Locally
-        run: yarn electron-builder
-
+        
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with: 
@@ -62,12 +46,11 @@ jobs:
           echo "C:\Program Files (x86)\Windows Kits\10\App Certification Kit" >> $GITHUB_PATH
           echo "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools" >> $GITHUB_PATH
           echo "C:\Program Files\DigiCert\DigiCert One Signing Manager Tools" >> $GITHUB_PATH
-
         shell: bash
 
       - name: Setup SSM KSP on windows latest
         run: |
-          curl -X GET  https://one.digicert.com/signingmanager/api-ui/v1/releases/smtools-windows-x64.msi/download -H "x-api-key:%SM_API_KEY%" -o smtools-windows-x64.msi
+          curl -X GET  https://demo.one.digicert.com/signingmanager/api-ui/v1/releases/smtools-windows-x64.msi/download -H "x-api-key:%SM_API_KEY%" -o smtools-windows-x64.msi
           msiexec /i smtools-windows-x64.msi /quiet /qn
           smksp_registrar.exe list
           smctl.exe keypair ls
