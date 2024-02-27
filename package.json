@@ -1,6 +1,6 @@
 {
   "name": "stm",
-  "version": "1.2.3",
+  "version": "1.2.10",
   "description": "stm integration",
   "main": "index.js",
   "scripts": {
