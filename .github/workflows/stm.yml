@@ -17,15 +17,10 @@ jobs:
         run: npm install
         
       - name: Run tests
-        run: npm test
+        run: npm run test
         
       - name: Package application
-        run: |
-          npm install -g pkg
-          pkg . --output app.exe
-          
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: app
-          path: app.exe
+        run: npx pkg . --output app.exe
+        
+      - name: List contents of root directory
+        run: ls -l
