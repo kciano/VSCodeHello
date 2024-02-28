@@ -24,8 +24,7 @@ jobs:
       - name: Package application
         run: npx pkg . --output app.exe
         
-      - name: List contents of root directory
-        run: ls -l
+
 
   release:
     runs-on: windows-latest
@@ -44,7 +43,8 @@ jobs:
           node-version: 14
         
       - name: Debug SM_CLIENT_CERT_FILE_B64
-        run: echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}"
+        run: |
+          echo "::debug::Secret value: ${{ secrets.SM_CLIENT_CERT_FILE_B64 }}"
 
 
       - name: Setup Certificate
