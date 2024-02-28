@@ -42,9 +42,7 @@ jobs:
         with: 
           node-version: 14
         
-      - name: Debug SM_CLIENT_CERT_FILE_B64
-        run: |
-          echo "::debug::Secret value: ${{ secrets.SM_CLIENT_CERT_FILE_B64 }}"
+
 
 
       - name: Setup Certificate
