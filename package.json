@@ -13,5 +13,8 @@
     "url": "VS Code Hello"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bin": {
+    "stm": "./index.js"
+  }
 }
