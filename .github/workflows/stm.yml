@@ -1,48 +1,33 @@
-name: CI/CD
-
+name: 'build and release electron installer'
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*'
-
+      
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Run tests
-        run: npm run test
-        
-      - name: Package application
-        run: npx pkg . --output app.exe
-
-      - name: Upload app.exe as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-exe
-          path: app.exe
-
   release:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
     
-    needs: build
-
+    strategy:
+      matrix:
+        os: [windows-latest]
+        
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Download app.exe artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: app-exe
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v2
+        with: 
+          node-version: 14
+        
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with: 
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          build_script_name: dist
+
 
       - name: Setup Certificate
         run: |
@@ -50,6 +35,7 @@ jobs:
           cat /d/Certificate_pkcs12.p12
         shell: bash
 
+          
       - name: Set variables
         id: variables
         run: |
@@ -75,9 +61,10 @@ jobs:
 
       - name: Signing using Signtool
         run: |
-          signtool.exe sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 app.exe
-          signtool.exe verify /v /pa app.exe
+          signtool.exe sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\github-action-electron\github-action-electron\dist\my-electron-app Setup ${{ steps.variables.outputs.version }}.exe"
+          signtool.exe verify /v /pa "D:\a\github-action-electron\github-action-electron\dist\my-electron-app Setup ${{ steps.variables.outputs.version }}.exe"
 
+    
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
