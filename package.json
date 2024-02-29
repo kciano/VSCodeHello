@@ -16,5 +16,8 @@
   "license": "ISC",
   "bin": {
     "stm": "./index.js"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.12.0"
   }
 }
