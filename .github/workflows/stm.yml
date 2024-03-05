@@ -24,6 +24,10 @@ jobs:
       - name: Set up Node.js environment
         run: npm install
 
+      - name: Create 'dist' directory if it doesn't exist
+        run: mkdir dist
+        shell: bash
+
       - name: Change working directory to 'dist'
         run: cd dist
 
