@@ -1,8 +1,8 @@
 name: 'build and release electron installer'
 on:
-  push:  
-    branches:  
-      - '*'
+  push:
+    tags:
+      - 'v*'
       
 jobs:
   release:
@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-node@v2
         with: 
           node-version: 14
-
         
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
