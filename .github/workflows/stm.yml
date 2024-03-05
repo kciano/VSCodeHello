@@ -1,8 +1,8 @@
 name: 'build and release electron installer'
 on:
-  push:
-    tags:
-      - 'v*'
+  push:  
+    branches:  
+      - '*'
       
 jobs:
   release:
