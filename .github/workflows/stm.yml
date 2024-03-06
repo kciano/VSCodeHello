@@ -3,8 +3,7 @@ on:
   push:
     tags:
       - 'v*'
-env:
-  draft: true
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
