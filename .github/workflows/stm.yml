@@ -23,13 +23,16 @@ jobs:
         
       - name: Build/release Electron app
         run: npm run build
-        
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+
       - name: Setup Certificate
         run: |
           echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > /d/Certificate_pkcs12.p12
           cat /d/Certificate_pkcs12.p12
         shell: bash
 
+          
       - name: Set variables
         id: variables
         run: |
@@ -55,9 +58,10 @@ jobs:
 
       - name: Signing using Signtool
         run: |
-          signtool.exe sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "dist\stm Setup ${{ steps.variables.outputs.version }}.exe"
-          signtool.exe verify /v /pa "dist\stm Setup ${{ steps.variables.outputs.version }}.exe"
+          signtool.exe sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\VSCodeHello\VSCodeHello\dist\stm Setup ${{ steps.variables.outputs.version }}.exe"
+          signtool.exe verify /v /pa "D:\a\VSCodeHello\VSCodeHello\dist\stm Setup ${{ steps.variables.outputs.version }}.exe"
 
+    
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
