@@ -22,7 +22,7 @@ jobs:
           node-version: 14
         
       - name: Build/release Electron app
-        run: npm run dist
+        run: npm run build
         
       - name: Setup Certificate
         run: |
