@@ -3,7 +3,8 @@ on:
   push:
     tags:
       - 'v*'
-      
+env:
+  draft: true
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -24,9 +25,7 @@ jobs:
       - name: Build/release Electron app
         run: npm run build
 
-        # Add the draft: true option here
-        draft: true
-
+       
       - name: Setup Certificate
         run: |
           echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > /d/Certificate_pkcs12.p12
