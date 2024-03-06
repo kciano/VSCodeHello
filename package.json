@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "test": "echo 'Running tests...'",
-    "build": "electron-builder",
+    "build": "electron-builder -c.electronVersion=29.1.0",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
