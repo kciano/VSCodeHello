@@ -60,14 +60,29 @@ jobs:
           dir
         shell: cmd
 
-      - name: Signing using Signtool
+      - name: Signing using smctl (sign root-level .ps1 files only)
+        shell: pwsh
         run: |
-          smctl sign --keypair-alias=GitHub_ActionScript --input="."
-          # signtool.exe sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 ".\\*.ps1"          
-        shell: cmd
+          $ErrorActionPreference = 'Stop'
+          Write-Host "Listing root-level .ps1 files to sign..."
+          $files = Get-ChildItem -Path . -Filter '*.ps1' -File
+          if (-not $files) {
+            Write-Host "No root-level .ps1 files found to sign."
+            exit 0
+          }
+          foreach ($f in $files) {
+            Write-Host "Signing: $($f.Name)"
+            # Use the full path in case of spaces
+            smctl sign --keypair-alias=GitHub_ActionScript --input="$($f.FullName)"
+            if ($LASTEXITCODE -ne 0) {
+              Write-Error "smctl returned exit code $LASTEXITCODE while signing $($f.FullName)"
+              exit $LASTEXITCODE
+            }
+          }
 
       - name: List Checkout
         run: dir
+        shell: cmd
 
       - name: Show files to upload
         run: dir *.ps1
